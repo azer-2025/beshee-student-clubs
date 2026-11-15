@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bishe.system.mapper.ClubMemberMapper">
+
+    <resultMap type="ClubMember" id="ClubMemberResult">
+        <result property="memberId"    column="member_id" />
+        <result property="clubId"      column="club_id" />
+        <result property="clubName"    column="club_name" />
+        <result property="userId"      column="user_id" />
+        <result property="memberRole"  column="member_role" />
+        <result property="status"      column="status" />
+        <result property="applyTime"   column="apply_time" />
+        <result property="joinTime"    column="join_time" />
+        <result property="positionName" column="position_name" />
+        <result property="honorRecord" column="honor_record" />
+        <result property="leaveTime"   column="leave_time" />
+        <result property="leaveReason" column="leave_reason" />
+        <result property="auditUserId" column="audit_user_id" />
+        <result property="auditTime"   column="audit_time" />
+        <result property="auditRemark" column="audit_remark" />
+        <result property="createBy"    column="create_by" />
+        <result property="createTime"  column="create_time" />
+        <result property="updateBy"    column="update_by" />
+        <result property="updateTime"  column="update_time" />
+        <result property="remark"      column="remark" />
+    </resultMap>
+
+    <sql id="selectClubMemberVo">
+        select m.member_id, m.club_id, m.user_id, m.member_role, m.status, m.apply_time, m.join_time, m.position_name,
+               m.honor_record, m.leave_time, m.leave_reason, m.audit_user_id, m.audit_time, m.audit_remark,
+               m.create_by, m.create_time, m.update_by, m.update_time, m.remark,
+               c.club_name
+        from club_member m
+        left join club_info c on m.club_id = c.club_id
+    </sql>
+
+    <select id="selectClubMemberById" parameterType="Long" resultMap="ClubMemberResult">
+        <include refid="selectClubMemberVo"/>
+        where member_id = #{memberId}
+    </select>
+
+    <select id="selectClubMemberList" parameterType="ClubMember" resultMap="ClubMemberResult">
+        <include refid="selectClubMemberVo"/>
+        <where>
+            <if test="clubId != null and clubId != 0">
+                and m.club_id = #{clubId}
+            </if>
+            <if test="userId != null and userId != 0">
+                and m.user_id = #{userId}
+            </if>
+            <if test="memberRole != null and memberRole != ''">
+                and m.member_role = #{memberRole}
+            </if>
+            <if test="status != null and status != ''">
+                and m.status = #{status}
+            </if>
+        </where>
+    </select>
+
+    <select id="countClubMemberByClubIdAndUserId" resultType="Integer">
+        select count(1) from club_member where club_id = #{clubId} and user_id = #{userId}
+    </select>
+
+    <insert id="insertClubMember" parameterType="ClubMember">
+        insert into club_member(
+            <if test="clubId != null">club_id,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="memberRole != null and memberRole != ''">member_role,</if>
+            <if test="status != null and status != ''">status,</if>
+            <if test="applyTime != null">apply_time,</if>
+            <if test="joinTime != null">join_time,</if>
+            <if test="positionName != null and positionName != ''">position_name,</if>
+            <if test="honorRecord != null and honorRecord != ''">honor_record,</if>
+            <if test="leaveTime != null">leave_time,</if>
+            <if test="leaveReason != null and leaveReason != ''">leave_reason,</if>
+            <if test="auditUserId != null">audit_user_id,</if>
+            <if test="auditTime != null">audit_time,</if>
+            <if test="auditRemark != null and auditRemark != ''">audit_remark,</if>
+            <if test="remark != null and remark != ''">remark,</if>
+            <if test="createBy != null and createBy != ''">create_by,</if>
+            create_time
+        ) values (
+            <if test="clubId != null">#{clubId},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="memberRole != null and memberRole != ''">#{memberRole},</if>
+            <if test="status != null and status != ''">#{status},</if>
+            <if test="applyTime != null">#{applyTime},</if>
+            <if test="joinTime != null">#{joinTime},</if>
+            <if test="positionName != null and positionName != ''">#{positionName},</if>
+            <if test="honorRecord != null and honorRecord != ''">#{honorRecord},</if>
+            <if test="leaveTime != null">#{leaveTime},</if>
+            <if test="leaveReason != null and leaveReason != ''">#{leaveReason},</if>
+            <if test="auditUserId != null">#{auditUserId},</if>
+            <if test="auditTime != null">#{auditTime},</if>
+            <if test="auditRemark != null and auditRemark != ''">#{auditRemark},</if>
+            <if test="remark != null and remark != ''">#{remark},</if>
+            <if test="createBy != null and createBy != ''">#{createBy},</if>
+            sysdate()
+        )
+    </insert>
+
+    <update id="updateClubMember" parameterType="ClubMember">
+        update club_member
+        <set>
+            <if test="clubId != null">club_id = #{clubId},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="memberRole != null">member_role = #{memberRole},</if>
+            <if test="status != null and status != ''">status = #{status},</if>
+            <if test="applyTime != null">apply_time = #{applyTime},</if>
+            <if test="joinTime != null">join_time = #{joinTime},</if>
+            <if test="positionName != null">position_name = #{positionName},</if>
+            <if test="honorRecord != null">honor_record = #{honorRecord},</if>
+            <if test="leaveTime != null">leave_time = #{leaveTime},</if>
+            <if test="leaveReason != null">leave_reason = #{leaveReason},</if>
+            <if test="auditUserId != null">audit_user_id = #{auditUserId},</if>
+            <if test="auditTime != null">audit_time = #{auditTime},</if>
+            <if test="auditRemark != null">audit_remark = #{auditRemark},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="updateBy != null and updateBy != ''">update_by = #{updateBy},</if>
+            update_time = sysdate()
+        </set>
+        where member_id = #{memberId}
+    </update>
+
+    <delete id="deleteClubMemberById" parameterType="Long">
+        delete from club_member where member_id = #{memberId}
+    </delete>
+
+    <delete id="deleteClubMemberByIds" parameterType="Long">
+        delete from club_member where member_id in
+        <foreach item="memberId" collection="array" open="(" separator="," close=")">
+            #{memberId}
+        </foreach>
+    </delete>
+
+</mapper>

@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bishe.system.mapper.ClubInfoMapper">
+
+    <resultMap type="ClubInfo" id="ClubInfoResult">
+        <result property="clubId"       column="club_id" />
+        <result property="categoryId"   column="category_id" />
+        <result property="clubName"     column="club_name" />
+        <result property="clubLogo"     column="club_logo" />
+        <result property="clubIntro"    column="club_intro" />
+        <result property="charterContent" column="charter_content" />
+        <result property="recruitPoster"  column="recruit_poster" />
+        <result property="honorWall"      column="honor_wall" />
+        <result property="leaderUserId" column="leader_user_id" />
+        <result property="applyUserId"  column="apply_user_id" />
+        <result property="teacherUserId" column="teacher_user_id" />
+        <result property="teacherAuditStatus" column="teacher_audit_status" />
+        <result property="teacherAuditTime" column="teacher_audit_time" />
+        <result property="teacherAuditRemark" column="teacher_audit_remark" />
+        <result property="applyTime"    column="apply_time" />
+        <result property="applyStatus"  column="apply_status" />
+        <result property="auditUserId"  column="audit_user_id" />
+        <result property="auditTime"    column="audit_time" />
+        <result property="auditRemark"  column="audit_remark" />
+        <result property="status"       column="status" />
+        <result property="createBy"     column="create_by" />
+        <result property="createTime"   column="create_time" />
+        <result property="updateBy"     column="update_by" />
+        <result property="updateTime"   column="update_time" />
+        <result property="remark"       column="remark" />
+    </resultMap>
+
+    <sql id="selectClubInfoVo">
+        select club_id, category_id, club_name, club_logo, club_intro, charter_content, recruit_poster, honor_wall,
+               leader_user_id, apply_user_id, teacher_user_id, teacher_audit_status, teacher_audit_time, teacher_audit_remark,
+               apply_time, apply_status, audit_user_id, audit_time, audit_remark, status,
+               create_by, create_time, update_by, update_time, remark
+        from club_info
+    </sql>
+
+    <select id="selectClubInfoById" parameterType="Long" resultMap="ClubInfoResult">
+        <include refid="selectClubInfoVo"/>
+        where club_id = #{clubId}
+    </select>
+
+    <select id="selectClubInfoList" parameterType="ClubInfo" resultMap="ClubInfoResult">
+        <include refid="selectClubInfoVo"/>
+        <where>
+            <if test="clubName != null and clubName != ''">
+                and club_name like concat('%', #{clubName}, '%')
+            </if>
+            <if test="categoryId != null and categoryId != 0">
+                and category_id = #{categoryId}
+            </if>
+            <if test="leaderUserId != null and leaderUserId != 0">
+                and leader_user_id = #{leaderUserId}
+            </if>
+            <if test="applyUserId != null and applyUserId != 0">
+                and apply_user_id = #{applyUserId}
+            </if>
+            <if test="applyStatus != null and applyStatus != ''">
+                and apply_status = #{applyStatus}
+            </if>
+            <if test="status != null and status != ''">
+                and status = #{status}
+            </if>
+        </where>
+    </select>
+
+    <insert id="insertClubInfo" parameterType="ClubInfo">
+        insert into club_info(
+            <if test="categoryId != null">category_id,</if>
+            <if test="clubName != null and clubName != ''">club_name,</if>
+            <if test="clubLogo != null and clubLogo != ''">club_logo,</if>
+            <if test="clubIntro != null and clubIntro != ''">club_intro,</if>
+            <if test="charterContent != null and charterContent != ''">charter_content,</if>
+            <if test="recruitPoster != null and recruitPoster != ''">recruit_poster,</if>
+            <if test="honorWall != null and honorWall != ''">honor_wall,</if>
+            <if test="leaderUserId != null">leader_user_id,</if>
+            <if test="applyUserId != null">apply_user_id,</if>
+            <if test="teacherUserId != null">teacher_user_id,</if>
+            <if test="teacherAuditStatus != null and teacherAuditStatus != ''">teacher_audit_status,</if>
+            <if test="teacherAuditTime != null">teacher_audit_time,</if>
+            <if test="teacherAuditRemark != null and teacherAuditRemark != ''">teacher_audit_remark,</if>
+            <if test="applyTime != null">apply_time,</if>
+            <if test="applyStatus != null and applyStatus != ''">apply_status,</if>
+            <if test="auditUserId != null">audit_user_id,</if>
+            <if test="auditTime != null">audit_time,</if>
+            <if test="auditRemark != null and auditRemark != ''">audit_remark,</if>
+            <if test="status != null and status != ''">status,</if>
+            <if test="remark != null and remark != ''">remark,</if>
+            <if test="createBy != null and createBy != ''">create_by,</if>
+            create_time
+        ) values (
+            <if test="categoryId != null">#{categoryId},</if>
+            <if test="clubName != null and clubName != ''">#{clubName},</if>
+            <if test="clubLogo != null and clubLogo != ''">#{clubLogo},</if>
+            <if test="clubIntro != null and clubIntro != ''">#{clubIntro},</if>
+            <if test="charterContent != null and charterContent != ''">#{charterContent},</if>
+            <if test="recruitPoster != null and recruitPoster != ''">#{recruitPoster},</if>
+            <if test="honorWall != null and honorWall != ''">#{honorWall},</if>
+            <if test="leaderUserId != null">#{leaderUserId},</if>
+            <if test="applyUserId != null">#{applyUserId},</if>
+            <if test="teacherUserId != null">#{teacherUserId},</if>
+            <if test="teacherAuditStatus != null and teacherAuditStatus != ''">#{teacherAuditStatus},</if>
+            <if test="teacherAuditTime != null">#{teacherAuditTime},</if>
+            <if test="teacherAuditRemark != null and teacherAuditRemark != ''">#{teacherAuditRemark},</if>
+            <if test="applyTime != null">#{applyTime},</if>
+            <if test="applyStatus != null and applyStatus != ''">#{applyStatus},</if>
+            <if test="auditUserId != null">#{auditUserId},</if>
+            <if test="auditTime != null">#{auditTime},</if>
+            <if test="auditRemark != null and auditRemark != ''">#{auditRemark},</if>
+            <if test="status != null and status != ''">#{status},</if>
+            <if test="remark != null and remark != ''">#{remark},</if>
+            <if test="createBy != null and createBy != ''">#{createBy},</if>
+            sysdate()
+        )
+    </insert>
+
+    <update id="updateClubInfo" parameterType="ClubInfo">
+        update club_info
+        <set>
+            <if test="categoryId != null">category_id = #{categoryId},</if>
+            <if test="clubName != null and clubName != ''">club_name = #{clubName},</if>
+            <if test="clubLogo != null">club_logo = #{clubLogo},</if>
+            <if test="clubIntro != null">club_intro = #{clubIntro},</if>
+            <if test="charterContent != null">charter_content = #{charterContent},</if>
+            <if test="recruitPoster != null">recruit_poster = #{recruitPoster},</if>
+            <if test="honorWall != null">honor_wall = #{honorWall},</if>
+            <if test="leaderUserId != null">leader_user_id = #{leaderUserId},</if>
+            <if test="applyUserId != null">apply_user_id = #{applyUserId},</if>
+            <if test="teacherUserId != null">teacher_user_id = #{teacherUserId},</if>
+            <if test="teacherAuditStatus != null and teacherAuditStatus != ''">teacher_audit_status = #{teacherAuditStatus},</if>
+            <if test="teacherAuditTime != null">teacher_audit_time = #{teacherAuditTime},</if>
+            <if test="teacherAuditRemark != null">teacher_audit_remark = #{teacherAuditRemark},</if>
+            <if test="applyTime != null">apply_time = #{applyTime},</if>
+            <if test="applyStatus != null and applyStatus != ''">apply_status = #{applyStatus},</if>
+            <if test="auditUserId != null">audit_user_id = #{auditUserId},</if>
+            <if test="auditTime != null">audit_time = #{auditTime},</if>
+            <if test="auditRemark != null">audit_remark = #{auditRemark},</if>
+            <if test="status != null and status != ''">status = #{status},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="updateBy != null and updateBy != ''">update_by = #{updateBy},</if>
+            update_time = sysdate()
+        </set>
+        where club_id = #{clubId}
+    </update>
+
+    <delete id="deleteClubInfoById" parameterType="Long">
+        delete from club_info where club_id = #{clubId}
+    </delete>
+
+    <delete id="deleteClubInfoByIds" parameterType="Long">
+        delete from club_info where club_id in
+        <foreach item="clubId" collection="array" open="(" separator="," close=")">
+            #{clubId}
+        </foreach>
+    </delete>
+
+    <select id="selectClubIdByLeaderUserId" parameterType="Long" resultType="Long">
+        select club_id
+        from club_info
+        where leader_user_id = #{leaderUserId}
+          and apply_status = '1'
+          and status = '0'
+        order by club_id asc
+        limit 1
+    </select>
+
+</mapper>

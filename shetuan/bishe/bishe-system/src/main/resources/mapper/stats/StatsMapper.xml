@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bishe.system.mapper.StatsMapper">
+
+    <select id="countClubTotal" resultType="Integer">
+        select count(1)
+        from club_info
+        where apply_status = '1' and status = '0'
+    </select>
+
+    <select id="countClubPending" resultType="Integer">
+        select count(1)
+        from club_info
+        where apply_status = '0'
+    </select>
+
+    <select id="countMemberTotal" resultType="Integer">
+        select count(1)
+        from club_member
+        where status = '1'
+    </select>
+
+    <select id="countActivityTotal" resultType="Integer">
+        select count(1)
+        from club_activity
+        where status = '1'
+    </select>
+
+    <select id="countActivityPending" resultType="Integer">
+        select count(1)
+        from club_activity
+        where status = '0'
+    </select>
+
+    <select id="countSignupTotal" resultType="Integer">
+        select count(1)
+        from activity_signup
+    </select>
+
+    <select id="countFundingPending" resultType="Integer">
+        select count(1)
+        from club_fund_apply
+        where status = '0'
+    </select>
+
+    <select id="countVenuePending" resultType="Integer">
+        select count(1)
+        from venue_apply
+        where status = '0'
+    </select>
+
+    <select id="selectTopClubs" resultType="java.util.Map">
+        select c.club_name as name, count(m.member_id) as value
+        from club_info c
+        left join club_member m on c.club_id = m.club_id and m.status = '1'
+        where c.status = '0'
+        group by c.club_id
+        order by value desc
+        limit 5
+    </select>
+
+    <select id="selectClubCategories" resultType="java.util.Map">
+        select cc.category_name as name, count(c.club_id) as value
+        from club_category cc
+        left join club_info c on cc.category_id = c.category_id and c.status = '0'
+        group by cc.category_id
+    </select>
+
+    <select id="selectActivityTrends" resultType="java.util.Map">
+        select
+            DATE_FORMAT(a.create_time, '%Y-%m') as month,
+            count(distinct a.activity_id) as activityCount,
+            count(distinct s.signup_id) as signupCount
+        from club_activity a
+        left join activity_signup s on a.activity_id = s.activity_id
+        group by month
+        order by month desc
+        limit 6
+    </select>
+
+</mapper>

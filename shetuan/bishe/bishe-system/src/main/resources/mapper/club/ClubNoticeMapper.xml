@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bishe.system.mapper.ClubNoticeMapper">
+
+    <resultMap type="ClubNotice" id="ClubNoticeResult">
+        <result property="noticeId"   column="notice_id" />
+        <result property="clubId"     column="club_id" />
+        <result property="title"      column="title" />
+        <result property="content"    column="content" />
+        <result property="status"     column="status" />
+        <result property="createBy"   column="create_by" />
+        <result property="createTime" column="create_time" />
+        <result property="updateBy"   column="update_by" />
+        <result property="updateTime" column="update_time" />
+        <result property="remark"     column="remark" />
+    </resultMap>
+
+    <sql id="selectClubNoticeVo">
+        select notice_id, club_id, title, content, status, create_by, create_time, update_by, update_time, remark
+        from club_notice
+    </sql>
+
+    <select id="selectClubNoticeById" parameterType="Long" resultMap="ClubNoticeResult">
+        <include refid="selectClubNoticeVo"/>
+        where notice_id = #{noticeId}
+    </select>
+
+    <select id="selectClubNoticeList" parameterType="ClubNotice" resultMap="ClubNoticeResult">
+        <include refid="selectClubNoticeVo"/>
+        <where>
+            <if test="clubId != null and clubId != 0">
+                and club_id = #{clubId}
+            </if>
+            <if test="title != null and title != ''">
+                and title like concat('%', #{title}, '%')
+            </if>
+            <if test="status != null and status != ''">
+                and status = #{status}
+            </if>
+        </where>
+    </select>
+
+    <insert id="insertClubNotice" parameterType="ClubNotice">
+        insert into club_notice(
+            <if test="clubId != null">club_id,</if>
+            <if test="title != null and title != ''">title,</if>
+            <if test="content != null">content,</if>
+            <if test="status != null and status != ''">status,</if>
+            <if test="remark != null and remark != ''">remark,</if>
+            <if test="createBy != null and createBy != ''">create_by,</if>
+            create_time
+        ) values (
+            <if test="clubId != null">#{clubId},</if>
+            <if test="title != null and title != ''">#{title},</if>
+            <if test="content != null">#{content},</if>
+            <if test="status != null and status != ''">#{status},</if>
+            <if test="remark != null and remark != ''">#{remark},</if>
+            <if test="createBy != null and createBy != ''">#{createBy},</if>
+            sysdate()
+        )
+    </insert>
+
+    <update id="updateClubNotice" parameterType="ClubNotice">
+        update club_notice
+        <set>
+            <if test="clubId != null">club_id = #{clubId},</if>
+            <if test="title != null and title != ''">title = #{title},</if>
+            <if test="content != null">content = #{content},</if>
+            <if test="status != null and status != ''">status = #{status},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="updateBy != null and updateBy != ''">update_by = #{updateBy},</if>
+            update_time = sysdate()
+        </set>
+        where notice_id = #{noticeId}
+    </update>
+
+    <delete id="deleteClubNoticeById" parameterType="Long">
+        delete from club_notice where notice_id = #{noticeId}
+    </delete>
+
+    <delete id="deleteClubNoticeByIds" parameterType="Long">
+        delete from club_notice where notice_id in
+        <foreach item="noticeId" collection="array" open="(" separator="," close=")">
+            #{noticeId}
+        </foreach>
+    </delete>
+
+</mapper>
+
